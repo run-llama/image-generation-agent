@@ -10,7 +10,7 @@ This is a **uv project**, thus you have to make sure uv is installed on your mac
 pip install uv
 ```
 
-Or follow the [installation guidelines](#) on uv docs.
+Or follow the [installation guidelines](https://docs.astral.sh/uv/getting-started/installation/) on uv docs.
 
 Once uv is on your machine, you can clone this repository:
 
