@@ -22,9 +22,8 @@ cd image-generation-agent
 And run:
 
 ```bash
-uv venv -p 3.12
+uv sync
 source .venv/bin/activate
-uv pip install .
 ```
 
 Congrats, you successfully installed this project and its dependencies!
