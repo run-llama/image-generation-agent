@@ -24,6 +24,7 @@ dependencies = [
     "openai>=1.79.0",
     "orjson>=3.10.18",
     "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
     "uvicorn>=0.34.2",
 ]
 description = "Interface between LLMs and your data"
@@ -37,27 +38,17 @@ keywords = [
     "retrieval",
 ]
 license = "MIT"
-name = "gemini-multimodal-agentworkflow"
+name = "image-generation-agent"
 readme = "README.md"
 requires-python = ">=3.9,<4.0"
 version = "0.1.0"
 
 [project.urls]
-Repository = "https://github.com/AstraBert/gemini-multimodal-agentworkflow"
-
-[tool.hatch.build.targets.sdist]
-include = ["_llama-index/llama_index"]
-
-[tool.hatch.build.targets.wheel]
-include = ["_llama-index/llama_index"]
-
-[tool.hatch.build.targets.wheel.sources]
-"_llama-index/llama_index" = "llama_index"
+Repository = "https://github.com/run-llama/image-generation-agent"
 
 [tool.mypy]
 disallow_untyped_defs = true
-# Remove venv skip when integrated with pre-commit
-exclude = ["_static", "build", "examples", "llama_index/ingestion/client", "notebooks", "venv"]
+exclude = [".venv"]
 explicit_package_bases = true
 ignore_missing_imports = true
 mypy_path = "llama_index"
@@ -67,10 +58,7 @@ python_version = "3.9"
 
 [tool.ruff]
 exclude = [
-    "_static",
-    "examples",
-    "llama_index/ingestion/client",
-    "notebooks",
+    ".venv",
 ]
 target-version = "py312"
 lint.ignore = [

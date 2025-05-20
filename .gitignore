@@ -3,3 +3,4 @@
 scripts/.env
 */__pycache__/
 scripts/output.png
+.ruff_cache/
