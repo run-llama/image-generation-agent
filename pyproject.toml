@@ -25,6 +25,7 @@ dependencies = [
     "orjson>=3.10.18",
     "pre-commit>=4.2.0",
     "uvicorn>=0.34.2",
+    "websockets>=15.0.1",
 ]
 description = "Image Generation Agent"
 license = "MIT"
