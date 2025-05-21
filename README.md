@@ -46,13 +46,21 @@ export OPENAI_API_KEY="sk-***"
 
 ## Launching
 
-While still being in the `scripts` sub-folder, you can launch the project with:
+While still being in the `scripts` sub-folder, you can launch the backend of the project with:
 
 ```bash
-uvicorn main:app --host 0.0.0.0 --port 8000
+python3 server.py
 ```
 
-With this command, you'll have the application running on http://localhost:8000 and you will be able to interact with it!
+You will se a log message telling you that the websocket server has been started on port 8765.
+
+After the websocket has connected, launch the frontend from another terminal window (remaining in the `scripts` sub-folder and with the virtual environment active), using:
+
+```bash
+python3 client.py
+```
+
+With this command, you'll have the application running on http://localhost:7860 and you will be able to interact with it!
 
 ## How does it work?
 
