@@ -9,7 +9,6 @@ async def run_agent(websocket):
     async for prompt in websocket:
         handler = workflow.run(user_msg=prompt)
         async for event in handler.stream_events():
-            print(type(event))
             if isinstance(event, ToolCallResult):
                 await websocket.send(f"**Result from `{event.tool_name}`**:\n\n{event.tool_output.content}\n\n")
             elif isinstance(event, ToolCall):

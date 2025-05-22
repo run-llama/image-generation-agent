@@ -2,7 +2,7 @@ import base64
 import json
 from pathlib import Path
 from utils import get_api_keys
-from openai import AsyncOpenAI
+from llama_index.llms.openai import OpenAIResponses
 from typing import Literal
 from pydantic import BaseModel, Field
 from llama_index.llms.google_genai import GoogleGenAI
@@ -15,7 +15,7 @@ class ImageEvaluation(BaseModel):
     prompt_agnostic_description: str = Field(description="Description of the image, agnostic of the image generation prompt")
 
 openai_api_key, google_api_key =get_api_keys()
-async_openai_client = AsyncOpenAI(api_key=openai_api_key)
+async_openai_client = OpenAIResponses(api_key=openai_api_key, model="gpt-4.1-mini",built_in_tools=[{"type": "image_generation"}])
 llm = GoogleGenAI(model="gemini-2.0-flash", api_key=google_api_key)
 llm_struct = llm.as_structured_llm(ImageEvaluation)
 
@@ -28,16 +28,13 @@ async def generate_image(prompt: str = Field(description="The image generation p
 
     """
     try:
-        img = await async_openai_client.images.generate(
-            model="gpt-image-1",
-            prompt=prompt,
-            n=1,
-            size="1024x1024"
-        )
-        image_bytes = base64.b64decode(img.data[0].b64_json)
-        with open("output.png", "wb") as f:
-            f.write(image_bytes)
-        print("Generated image", flush=True)
+        messages = [ChatMessage.from_str(content=prompt, role="user")]
+        img = await async_openai_client.achat(messages)
+        for block in img.message.blocks:
+            if isinstance(block, ImageBlock):
+                image_bytes = base64.b64decode(block.image)
+                with open("output.png", "wb") as f:
+                    f.write(image_bytes)
         return "Image successfully generated"
     except Exception as e:
         return f"An error occurred during image generation: {e.__str__()}"
@@ -53,5 +50,4 @@ async def evaluate_generated_image(prompt: str = Field(description="The original
     messages = [ChatMessage(role=MessageRole.USER, blocks=[ImageBlock(path=Path("output.png")), TextBlock(text=f"Could you (1) evaluate the faithfulness of the attached image to this prompt: '{prompt}', (2) evaluate the quality of the image and (3) produce a description of the image that is agnostic of the prompt that was used to generate it?")])]
     resp = await llm_struct.achat(messages=messages)
     struct_output = json.loads(resp.message.blocks[0].text)
-    print("Generated evaluation", flush=True)
     return f"The generated image can be described as:\n'''\n{struct_output['prompt_agnostic_description']}\n'''\nThe faithfulness of the generated image to the original prompt is: {struct_output['faithfulness']}%.\nThe quality of the image is {struct_output['quality']}."
