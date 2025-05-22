@@ -17,7 +17,7 @@ async def websocket_chat(prompt):
             yield full_response, "output.png"
 
     except Exception as e:
-        yield f"❌ Error: {e}"
+        yield f"Error: {e}"
 
 def launch_interface():
     with gr.Blocks(theme=gr.themes.Citrus(primary_hue="indigo", secondary_hue="teal")) as frontend:
